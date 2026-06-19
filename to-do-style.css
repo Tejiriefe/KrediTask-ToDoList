@@ -1,0 +1,495 @@
+/* ================================================================
+   style.css — TaskFlow To-Do App
+   
+   Design decisions:
+   - Palette: deep navy (#0f172a) page background gives the cards
+     high visual contrast without the tired dark-mode cliché of pure
+     black. Accent is a warm indigo (#6366f1) — distinctive yet calm
+     enough for a productivity tool.
+   - Typography: "Inter" (Google Fonts fallback to system-ui) for
+     body text — clean and highly legible at small sizes. Display
+     size for the logo uses letter-spacing to create identity.
+   - Layout: single centered column, max-width 900px. The form and
+     table are separate "card" surfaces floating on the background.
+   - Signature element: the ✦ logo glyph pulses softly on load —
+     one subtle motion moment, everything else is still.
+================================================================ */
+
+/* ----------------------------------------------------------------
+   GOOGLE FONT IMPORT
+   Inter is a neutral, highly legible sans-serif — great for forms
+   and data tables because it has clear numerals.
+---------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+
+/* ----------------------------------------------------------------
+   CSS CUSTOM PROPERTIES (variables)
+   Defining colours and spacing in one place means we only need to
+   change a value here to update the whole app.
+---------------------------------------------------------------- */
+:root {
+  /* Colours */
+  --bg:          #ffffff;   /* deep navy page background            */
+  --surface:    #ee335b;   /* card / surface colour                */
+  --border:      #334155;   /* subtle borders and dividers          */
+  --accent:      #ffd258;   /* indigo — primary action colour       */
+  --accent-dark: #FFE8A9;   /* darker shade for hover states        */
+  --text-main:   #fdfdfd;   /* near-white for headings              */
+  --text-muted:  #aaaaaa;   /* grey for labels and secondary text   */
+  --green:       #22c55e;   /* View button                          */
+  --green-dark:  #16a34a;
+  --amber:       #f59e0b;   /* Edit button                          */
+  --amber-dark:  #d97706;
+  --red:         #ef4444;   /* Delete button                        */
+  --red-dark:    #dc2626;
+
+  /* Spacing scale */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+
+/* ----------------------------------------------------------------
+   RESET & BASE
+   Remove browser default margins and set box-sizing globally so
+   padding is included in element widths — easier to reason about.
+---------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+
+/* ================================================================
+   HEADER
+================================================================ */
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-md) var(--space-xl);
+  
+}
+
+.header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+/* Logo lockup */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.logo-icon {
+  
+  color: var(--accent);
+  font-size: 1.4rem;
+    
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: 0.6; transform: scale(1.15); }
+}
+
+.logo-text {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-main);
+}
+
+.tagline {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+/* ================================================================
+   MAIN CONTAINER
+   Centres everything and adds breathing room top and bottom.
+================================================================ */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+
+/* ================================================================
+   CARDS
+   Both the form section and the table section use this class.
+================================================================ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: var(--space-lg);
+}
+
+
+/* ================================================================
+   FORM SECTION
+================================================================ */
+
+/* Three-column grid on wide screens, single column on mobile */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+/* Each label + input pair */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-group input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: var(--space-sm) var(--space-md);
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+/* Highlight the active input with the accent colour */
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* Fix the browser's dark-mode date/time picker colour on dark bg */
+.form-group input::-webkit-calendar-picker-indicator {
+  filter: invert(1) opacity(0.5);
+  cursor: pointer;
+}
+
+/* Row holding the submit / cancel buttons */
+.btn-row {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+
+/* ================================================================
+   BUTTONS
+   All buttons share .btn; each variant adds colour via a modifier.
+================================================================ */
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: var(--space-sm) var(--space-lg);
+  transition: background 0.2s, transform 0.1s;
+}
+
+/* Slight scale-down on click gives tactile feedback */
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Primary — indigo; used for Add / Update / Close */
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--accent-dark);
+}
+
+/* Ghost — transparent outline; used for Cancel */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.btn-ghost:hover {
+  border-color: var(--text-muted);
+  color: var(--text-main);
+}
+
+/* Inline action buttons inside table rows */
+.btn-view   { background: var(--green);  color: #fff; }
+.btn-view:hover   { background: var(--green-dark); }
+
+.btn-edit   { background: var(--amber);  color: #fff; }
+.btn-edit:hover   { background: var(--amber-dark); }
+
+.btn-delete { background: var(--red);    color: #fff; }
+.btn-delete:hover { background: var(--red-dark);   }
+
+/* Make the small action buttons a bit more compact */
+.btn-view, .btn-edit, .btn-delete {
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-view:active, .btn-edit:active, .btn-delete:active {
+  transform: scale(0.96);
+}
+
+
+/* ================================================================
+   TABLE SECTION
+================================================================ */
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+/* Pill badge showing the task count */
+.task-count {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 12px;
+}
+
+/* Empty state centred placeholder */
+.empty-state {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: var(--space-sm);
+}
+
+/* Horizontal scroll wrapper keeps the table from breaking on
+   narrow screens */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 560px; /* ensures columns don't squish on narrow view */
+}
+
+thead {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+th {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+td {
+  border-top: 1px solid var(--border);
+  color: var(--text-main);
+  font-size: 0.9rem;
+  padding: var(--space-sm) var(--space-md);
+  vertical-align: middle;
+}
+
+/* Zebra stripes for readability */
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Highlight on hover */
+tbody tr:hover {
+  background: rgba(99, 102, 241, 0.06);
+}
+
+/* The cell holding the three action buttons */
+.action-cell {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+/* ID column — monospace numerals look sharper */
+.id-cell {
+  color: var(--text-muted);
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+
+/* ================================================================
+   VIEW MODAL
+================================================================ */
+
+/* Dark semi-transparent backdrop */
+.modal-overlay {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.65);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  padding: var(--space-md);
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 100;
+}
+
+/* The white card that appears over the overlay */
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  max-width: 440px;
+  padding: var(--space-lg);
+  position: relative;
+  width: 100%;
+}
+
+.modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+  color: var(--accent);
+}
+
+/* Close × button in the top-right corner */
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: var(--space-xs);
+  position: absolute;
+  right: var(--space-md);
+  top: var(--space-md);
+  transition: color 0.2s;
+}
+.modal-close:hover {
+  color: var(--text-main);
+}
+
+/* Each label–value row inside the modal */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-value {
+  color: var(--text-main);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+
+/* ================================================================
+   RESPONSIVE — MOBILE ADJUSTMENTS
+   Below 600px the form becomes a single column and header stacks.
+================================================================ */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
